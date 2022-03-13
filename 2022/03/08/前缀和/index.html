@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Hello World | banyue&#39;s blog</title>
+    <title>前缀和 | banyue&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     
@@ -94,7 +94,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cl0i8jktz0001m8n01gyz0yqu" class="article article-type-post" itemscope
+    <article id="post-cl0i8jku40003m8n08o2ab1h3" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -110,7 +110,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      前缀和
     </h1>
   
 
@@ -120,11 +120,15 @@
         <div class="article-more-info article-more-info-post hairline">
 
             <div class="article-date">
-  <time datetime="2021-11-18T07:22:42.224Z" itemprop="datePublished">2021-11-18</time>
+  <time datetime="2022-03-08T14:29:02.550Z" itemprop="datePublished">2022-03-08</time>
 </div>
 
             
 
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" rel="tag">算法基础</a></li></ul>
+            </div>
             
 
             
@@ -132,19 +136,86 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+            <h2 id="一维前缀和"><a href="#一维前缀和" class="headerlink" title="一维前缀和"></a>一维前缀和</h2><p><img src="/2022/03/08/%E5%89%8D%E7%BC%80%E5%92%8C/1646489209762.png" alt="1646489209762"></p>
+<p>步骤：</p>
+<ol>
+<li>预处理前缀和数组，一般为了防止数组越界（L - 1）使所有数组下标为0；</li>
+<li>用公式求区间和</li>
+</ol>
+<span id="more"></span>
+
+<p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/797/">795. 前缀和 - AcWing题库</a></p>
+<pre><code class="c++">#include &lt;iostream&gt;
+
+using namespace std;
+
+const int N = 100010;
+int a[N] = &#123;0&#125;;
+int sum[N] = &#123;0&#125;;
+int n, m;
+int l, r;
+
+int main()
+&#123;
+    scanf(&quot;%d %d&quot;, &amp;n, &amp;m);
+    for (int i = 1; i &lt;= n; i++) &#123;
+        cin &gt;&gt; a[i];
+        sum[i] = sum[i - 1] + a[i];
+    &#125;
+    
+    while (m--) &#123;
+        scanf(&quot;%d %d&quot;, &amp;l, &amp;r);
+        printf(&quot;%d\n&quot;, sum[r] - sum[l - 1]);
+    &#125;
+    return 0;
+&#125;
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+<h2 id="二维前缀和"><a href="#二维前缀和" class="headerlink" title="二维前缀和"></a>二维前缀和</h2><p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/798/">796. 子矩阵的和 - AcWing题库</a></p>
+<pre><code class="c++">#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+
+const int N = 1010;
+int a[N][N];
+int s[N][N];
+int n, m;
+int q;
+
+int main()
+&#123;
+    scanf(&quot;%d%d%d&quot;, &amp;n, &amp;m, &amp;q);
+    
+    for (int i = 1; i &lt;= n; i++) &#123;
+        for (int j = 1; j &lt;= m; j++) &#123;
+            scanf(&quot;%d&quot;, &amp;a[i][j]);
+        &#125;
+    &#125;
+    
+    for (int i = 1; i &lt;= n; i++) &#123;
+        for (int j = 1; j &lt;= m; j++) &#123;
+            s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + a[i][j];
+        &#125;
+    &#125;
+    
+    int x1, y1;
+    int x2, y2;
+    int res;
+    while (q--) &#123;
+        scanf(&quot;%d%d%d%d&quot;, &amp;x1, &amp;y1, &amp;x2, &amp;y2);
+        res = s[x2][y2] - s[x1 - 1][y2] - s[x2][y1 - 1] + s[x1 - 1][y1 - 1];
+        printf(&quot;%d\n&quot;, res);
+    &#125;
+    return 0;
+&#125;
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+<p>理清思路后其实不难</p>
+<p>核心是<code>s[i][j]</code>和<code>res</code>的计算</p>
+<pre><code>s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + a[i][j];
+res = s[x2][y2] - s[x1 - 1][y2] - s[x2][y1 - 1] + s[x1 - 1][y1 - 1];
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+<p>关于<code>s[i][j]</code>最开始的想法是和一维前缀和一样，在处理<code>a[i][j]</code>输入的时候顺便计算</p>
+<pre><code>s[i][j] = s[i][j - 1] + a[i][j]; 
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>但是这样明显有个问题，在 j - 1 恰好已经等于最后一列时，上面的式子将失去意义</p>
 
         </div>
 
@@ -163,15 +234,20 @@
     
 <nav class="article-nav">
   
-    <a href="/2021/11/18/Servlet/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/03/13/linux%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" id="article-nav-newer" class="article-nav-link-wrap">
       <div class="article-nav-caption">下一篇</div>
       <div class="article-nav-title">
         
-          Servlet
+          linux常用命令总结
         
       </div>
     </a>
   
+  
+    <a href="/2021/11/18/Servlet/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Servlet</div>
+    </a>
   
 </nav>
 
@@ -179,15 +255,15 @@
     <section class="share">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=Hello World - banyue's blog&url=http://example.com/2021/11/18/hello-world/">
+            href="https://twitter.com/share?text=前缀和 - banyue's blog&url=http://example.com/2022/03/08/%E5%89%8D%E7%BC%80%E5%92%8C/">
             <box-icon type='logo' name='twitter'></box-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=Hello World - banyue's blog&u=http://example.com/2021/11/18/hello-world/">
+            href="https://www.facebook.com/sharer.php?title=前缀和 - banyue's blog&u=http://example.com/2022/03/08/%E5%89%8D%E7%BC%80%E5%92%8C/">
             <box-icon name='facebook-square' type='logo' ></box-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=Hello World - banyue's blog&url=http://example.com/2021/11/18/hello-world/&pic=">
+            href="https://service.weibo.com/share/share.php?title=前缀和 - banyue's blog&url=http://example.com/2022/03/08/%E5%89%8D%E7%BC%80%E5%92%8C/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>
